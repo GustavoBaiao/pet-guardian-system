@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data // gerar getters e sterrs
 @NoArgsConstructor // cria um contrutor vazio
@@ -34,5 +35,8 @@ public class Usuario {
     @Column(nullable = false)
     private String versaoTermos = "1.0"; // versão da política aceita
 
+    // Relacionamento com pets
+    @OneToMany(mappedBy = "dono", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets;
 
 }
