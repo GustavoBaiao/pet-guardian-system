@@ -1,6 +1,7 @@
 package com.petguardian.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +38,7 @@ public class Usuario {
 
     // Relacionamento com pets
     @OneToMany(mappedBy = "dono", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Pet> pets;
 
 }
