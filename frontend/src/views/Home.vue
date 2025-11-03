@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <img src="/pets.png" alt="Pets" class="home-image" />
+    <img src="/cadastrapets.png" alt="Pets" class="home-image" />
   </div>
 </template>
 
@@ -13,7 +13,6 @@
   justify-content: center;
   align-items: center;
   height: 80vh; /* altura da tela */
-  background-color: #f5f5f5;
 }
 
 .home-image {

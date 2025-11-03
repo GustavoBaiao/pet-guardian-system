@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Login</h1>
+    <h1>LOGIN</h1>
     <form @submit.prevent="handleLogin">
       <InputField v-model="email" placeholder="Email" />
       <InputField v-model="password" placeholder="Senha" type="password" />
@@ -33,4 +33,12 @@ const handleLogin = () => {
 
 <style>
 .container { max-width: 400px; margin: 20px auto; }
+
+h1 {
+  text-align: center;
+  color: #42b983;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 15px;
+}
+
 </style>
