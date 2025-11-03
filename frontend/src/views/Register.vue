@@ -5,12 +5,12 @@
 
       <!-- Dados do Tutor -->
       <h2>TUTOR</h2>
-      <InputField v-model="tutorName" placeholder="Nome do Tutor" />
-      <InputField v-model="tutorEmail" placeholder="Email" type="email" />
-      <InputField v-model="tutorPassword" placeholder="Senha" type="password" />
+      <InputField v-model="tutorName" placeholder="Nome do Tutor" label="Nome do Tutor:" />
+      <InputField v-model="tutorEmail" placeholder="Seu Email" label="Email:" type="email" />
+      <InputField v-model="tutorPassword" type="password" label="Senha:" placeholder="Sua senha" />
 
       <!-- Confirmar senha -->
-      <InputField v-model="confirmPassword" placeholder="Confirmar Senha" type="password" />
+      <InputField v-model="confirmPassword" type="password" label="Confirmação de senha:" placeholder="Repita sua senha" />
 
       <!-- Regras da senha -->
       <ul class="password-rules">
@@ -25,10 +25,10 @@
 
       <!-- Dados do Pet -->
       <h2>PET</h2>
-      <InputField v-model="petName" placeholder="Nome do Pet" />
-      <InputField v-model="petSpecies" placeholder="Espécie" />
-      <InputField v-model="petBreed" placeholder="Raça" />
-      <InputField v-model="petAge" placeholder="Idade" type="number" />
+      <InputField v-model="petName" placeholder="Nome do Pet" label="Nome do Pet" />
+      <InputField v-model="petSpecies" placeholder="Nome da Espécie" label="Espécie:" />
+      <InputField v-model="petBreed" placeholder="Nome da Raça" label="Raça:"/>
+      <InputField v-model="petAge" placeholder="Coloque a Idade" label="Idade:" type="number" />
 
       <!-- Aceite da política -->
       <label class="terms-label">
