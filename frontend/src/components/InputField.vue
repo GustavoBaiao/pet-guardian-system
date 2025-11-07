@@ -10,18 +10,15 @@
       />
 
       <button 
-  v-if="type === 'password'"
-  class="toggle-btn"
-  type="button"
-  @click="showPassword = !showPassword"
->
-  <img
-    :src="showPassword ? '/src/assets/eye-open.svg' : '/src/assets/eye-closed.svg'"
-    alt="Mostrar senha"
-    class="eye-icon"
-  />
+        v-if="type === 'password'"
+        class="toggle-btn"
+        type="button"
+        @click="showPassword = !showPassword">
+        <img
+        :src="showPassword ? '/icons/eye-open.svg' : '/icons/eye-closed.svg'"
+        alt="Mostrar senha"
+        class="eye-icon"/>
 </button>
-
     </div>
   </div>
 </template>
@@ -43,6 +40,7 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 const showPassword = ref(false);
 
+
 // Valor interno do input
 const inputValue = ref(props.modelValue);
 
@@ -55,6 +53,7 @@ watch(() => props.modelValue, (val) => {
 watch(inputValue, (val) => {
   emit("update:modelValue", val);
 });
+
 </script>
 
 

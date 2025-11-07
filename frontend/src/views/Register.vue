@@ -36,6 +36,8 @@
           <InputField v-model="petSpecies" placeholder="Nome da Espécie" label="Espécie:" />
           <InputField v-model="petBreed" placeholder="Nome da Raça" label="Raça:"/>
           <InputField v-model="petAge" placeholder="Coloque a Idade" label="Idade:" type="number" />
+          <InputField v-model="petVaccines" placeholder="Ex: Raiva, V8, Gripe Canina" label="Vacinas que pet já tomou:"/>
+
 
           <!-- Termos -->
           <label class="terms-label">
@@ -71,6 +73,8 @@ const petName = ref('')
 const petSpecies = ref('')
 const petBreed = ref('')
 const petAge = ref('')
+const petVaccines = ref('')
+
 
 const acceptTerms = ref(false)
 
@@ -96,10 +100,11 @@ const passwordsMatch = computed(() =>
 
 const handleRegister = () => {
   if (!tutorName.value || !tutorEmail.value || !tutorPassword.value ||
-      !petName.value || !petSpecies.value || !petBreed.value || !petAge.value) {
+    !petName.value || !petSpecies.value || !petBreed.value || !petAge.value || !petVaccines.value) {
     alert('Preencha todos os campos!')
     return
-  }
+}
+
 
   if (!passwordValid.value) {
     alert('A senha não atende aos requisitos de segurança!')
@@ -122,7 +127,8 @@ const handleRegister = () => {
 }
 
 
-  alert(`Cadastro realizado com sucesso!\nTutor: ${tutorName.value}\nPet: ${petName.value}`)
+alert(`Cadastro realizado com sucesso! Tutor: ${tutorName.value} Pet: ${petName.value} Vacinas: ${petVaccines.value}`)
+
 
   tutorName.value = ''
   tutorEmail.value = ''
@@ -132,6 +138,7 @@ const handleRegister = () => {
   petSpecies.value = ''
   petBreed.value = ''
   petAge.value = ''
+  petVaccines.value = ''
   acceptTerms.value = false
 }
 </script>
