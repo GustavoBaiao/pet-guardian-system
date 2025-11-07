@@ -85,6 +85,7 @@ watch(isDark, (val) => {
 .logo {
   font-size: 1.2rem;
   font-weight: bold;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Links container */
