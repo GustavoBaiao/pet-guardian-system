@@ -1,35 +1,56 @@
 package com.petguardian.backend.security;
 
-import com.petguardian.backend.model.Usuario;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "chaveSuperSecretaMuitoSegura";
 
-    // Método para gerar token JWT
-    public String gerarToken(Usuario usuario) {
-        Date agora = new Date();
-        Date expiracao = new Date(System.currentTimeMillis() + 30 * 60 * 1000); // 30 min
+    private static final String SECRET_KEY = "chaveSuperSecretaParaJWTDoPetGuardianComMaisDe32Caracteres";
+    private static final long EXPIRATION_TIME = 30 * 60 * 1000; // 30 minutos
 
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+
+    // Gera o token JWT
+    public String generateToken(String username) {
         return Jwts.builder()
-                .setSubject(usuario.getEmail())
-                .setIssuedAt(agora)
-                .setExpiration(expiracao)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Método para extrair email do token
-    public String extrairEmail(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+    // Extrai o nome de usuário (email)
+    public String extractUsername(String token) {
+        return parseClaims(token).getSubject();
+    }
+
+    // Valida o token
+    public boolean isTokenValid(String token) {
+        try {
+            parseClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    // Método auxiliar para parsing seguro
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+    }
+
+    // (opcional) retorna a data de expiração
+    public Date extractExpiration(String token) {
+        return parseClaims(token).getExpiration();
     }
 }
