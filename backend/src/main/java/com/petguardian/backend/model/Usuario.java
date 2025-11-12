@@ -45,7 +45,7 @@ public class Usuario {
     private Boolean is2FAEnabled = false;
 
     // Relacionamento com pets
-    @OneToMany(mappedBy = "dono", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Pet> pets;
 }

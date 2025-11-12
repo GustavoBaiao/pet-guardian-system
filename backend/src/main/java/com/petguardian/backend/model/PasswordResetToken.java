@@ -1,11 +1,8 @@
 package com.petguardian.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 public class PasswordResetToken {
 
@@ -13,10 +10,46 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String token;
 
-    @OneToOne
+    @Column(nullable = false)
+    private LocalDateTime expirationDate;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    private LocalDateTime expirationDate;
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }
