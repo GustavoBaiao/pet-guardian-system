@@ -3,11 +3,12 @@ package com.petguardian.backend.service;
 import com.petguardian.backend.model.Usuario;
 import com.petguardian.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
-
+import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -15,35 +16,56 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Retorna todos os usuários
-    public List<Usuario> listarUsuario() {
-        return usuarioRepository.findAll();
-    }
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // Busca usuário pelo ID
-    public Optional<Usuario> buscarPorId(Long id) {
-        return usuarioRepository.findById(id);
-    }
-
-    // Salva ou atualiza usuário
+    // Salva usuário (usado pelo RegisterController)
     public Usuario salvarUsuario(Usuario usuario) {
+        // Criptografa a senha antes de salvar
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         return usuarioRepository.save(usuario);
     }
 
-    // Deleta usuário pelo ID
-    public void deletarUsuario(Long id) {
-        usuarioRepository.deleteById(id);
+    // Verifica se o e-mail já existe
+    public boolean emailExiste(String email) {
+        return usuarioRepository.findByEmail(email).isPresent();
     }
 
-    // Busca usuário pelo email
+    // Cria usuário e gera token de e-mail (usado na confirmação)
+    public Usuario registrarUsuario(String email, String senha) {
+        Usuario usuario = new Usuario();
+        usuario.setEmail(email);
+        usuario.setSenha(passwordEncoder.encode(senha));
+        gerarTokenEmail(usuario);
+        return usuarioRepository.save(usuario);
+    }
+
+    // Gera token aleatório de confirmação de e-mail
+    public void gerarTokenEmail(Usuario usuario) {
+        String token = UUID.randomUUID().toString();
+        usuario.setTokenEmail(token);
+        usuario.setValidadeTokenEmail(LocalDateTime.now().plusMinutes(10)); // token válido por 10 min
+    }
+
+    // Valida token enviado pelo usuário
+    public boolean confirmarEmail(String email, String token) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+        if (optionalUsuario.isEmpty()) return false;
+
+        Usuario usuario = optionalUsuario.get();
+
+        if (usuario.getTokenEmail() == null || !usuario.getTokenEmail().equals(token)) return false;
+        if (usuario.getValidadeTokenEmail().isBefore(LocalDateTime.now())) return false;
+
+        usuario.setEmailConfirmado(true);
+        usuario.setTokenEmail(null);
+        usuario.setValidadeTokenEmail(null);
+
+        usuarioRepository.save(usuario);
+        return true;
+    }
+
+    // Busca usuário por e-mail
     public Optional<Usuario> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
-    }
-
-    // Extrai email do token JWT
-    @Autowired
-    private com.petguardian.backend.security.JwtUtil jwtUtil;
-    public String getEmailFromToken(String token) {
-        return jwtUtil.extractUsername(token);
     }
 }

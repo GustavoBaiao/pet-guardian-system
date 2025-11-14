@@ -1,7 +1,7 @@
 <template>
   <div class="auth-wrapper">
     <div class="auth-content">
-      
+
       <!-- Imagem -->
       <div class="auth-image-side">
         <img src="/src/assets/cadastrapets.png" alt="Cadastro Pets" />
@@ -63,6 +63,11 @@
 import { ref, computed } from 'vue'
 import InputField from '../components/InputField.vue'
 import Button from '../components/Button.vue'
+import api from '../services/api'
+import { useAuthStore } from '../store/auth'
+
+
+const auth = useAuthStore()
 
 const tutorName = ref('')
 const tutorEmail = ref('')
@@ -98,21 +103,15 @@ const passwordsMatch = computed(() =>
 )
 
 
-const handleRegister = () => {
+const handleRegister = async () => {
   if (!tutorName.value || !tutorEmail.value || !tutorPassword.value ||
-    !petName.value || !petSpecies.value || !petBreed.value || !petAge.value || !petVaccines.value) {
+      !petName.value || !petSpecies.value || !petBreed.value || !petAge.value || !petVaccines.value) {
     alert('Preencha todos os campos!')
-    return
-}
-
-
-  if (!passwordValid.value) {
-    alert('A senha não atende aos requisitos de segurança!')
     return
   }
 
-  if (tutorPassword.value !== confirmPassword.value) {
-    alert('As senhas não coincidem!')
+  if (!passwordValid.value || !passwordsMatch.value) {
+    alert('Senha inválida ou não coincide!')
     return
   }
 
@@ -121,26 +120,42 @@ const handleRegister = () => {
     return
   }
 
-  if (!passwordsMatch.value) {
-  alert('As senhas não coincidem!')
-  return
+  try {
+    // ✅ Payload atualizado
+    const payload = {
+      nome: tutorName.value,
+      email: tutorEmail.value,
+      senha: tutorPassword.value,
+      aceitouTermos: acceptTerms.value,
+      pets: [
+        {
+          nome: petName.value,
+          especie: petSpecies.value,
+          raca: petBreed.value,
+          idade: parseInt(petAge.value),
+          vacinas: petVaccines.value
+        }
+      ]
+    }
+
+    const response = await api.post('/auth/register', payload)
+
+    // 🔹 Salvar token e usuário no store e localStorage
+    auth.usuario = response.data.usuario
+    auth.token = response.data.token
+    localStorage.setItem('token', response.data.token)
+
+    alert('Cadastro realizado com sucesso!')
+    console.log('Usuário cadastrado:', auth.usuario)
+    console.log('Token JWT:', auth.token)
+
+  } catch (error) {
+    console.error(error)
+    alert('Erro ao cadastrar! Verifique os dados e tente novamente.')
+  }
 }
 
 
-alert(`Cadastro realizado com sucesso! Tutor: ${tutorName.value} Pet: ${petName.value} Vacinas: ${petVaccines.value}`)
-
-
-  tutorName.value = ''
-  tutorEmail.value = ''
-  tutorPassword.value = ''
-  confirmPassword.value = ''
-  petName.value = ''
-  petSpecies.value = ''
-  petBreed.value = ''
-  petAge.value = ''
-  petVaccines.value = ''
-  acceptTerms.value = false
-}
 </script>
 
 

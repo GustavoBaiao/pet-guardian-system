@@ -2,17 +2,13 @@ package com.petguardian.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data // gera getters e setters
-@NoArgsConstructor // cria um construtor vazio
-@AllArgsConstructor // cria um construtor com todos os atributos
-@Entity // indica que é uma entidade JPA
+@Entity
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -20,32 +16,50 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String nome;
-
-    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
     private String senha;
 
-    @Column(nullable = false)
-    private Boolean aceitouTermos;
+    private Boolean aceitouTermos = false;
 
-    @Column(nullable = false)
-    private String versaoTermos = "1.0"; // versão da política aceita
+    private String codigo2FA;
+    private String tokenEmail;
+    private LocalDateTime validadeTokenEmail;
+    private Boolean emailConfirmado = false;
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(); // data de criação do usuário
+    // ✅ Corrigido: mappedBy = "usuario"
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonManagedReference
+    private List<Pet> pets = new ArrayList<>();
 
-    // 🔹 Campo para chave secreta do Google Authenticator
-    private String secret2FA;
+    // === Getters e Setters ===
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // 🔹 Indica se o 2FA está ativado
-    private Boolean is2FAEnabled = false;
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    // Relacionamento com pets
-    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Pet> pets;
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+
+    public Boolean getAceitouTermos() { return aceitouTermos; }
+    public void setAceitouTermos(Boolean aceitouTermos) { this.aceitouTermos = aceitouTermos; }
+
+    public String getCodigo2FA() { return codigo2FA; }
+    public void setCodigo2FA(String codigo2FA) { this.codigo2FA = codigo2FA; }
+
+    public String getTokenEmail() { return tokenEmail; }
+    public void setTokenEmail(String tokenEmail) { this.tokenEmail = tokenEmail; }
+
+    public LocalDateTime getValidadeTokenEmail() { return validadeTokenEmail; }
+    public void setValidadeTokenEmail(LocalDateTime validadeTokenEmail) { this.validadeTokenEmail = validadeTokenEmail; }
+
+    public Boolean getEmailConfirmado() { return emailConfirmado; }
+    public void setEmailConfirmado(Boolean emailConfirmado) { this.emailConfirmado = emailConfirmado; }
+
+    public List<Pet> getPets() { return pets; }
+    public void setPets(List<Pet> pets) { this.pets = pets; }
 }

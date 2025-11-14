@@ -1,8 +1,11 @@
 package com.petguardian.backend.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name = "pets")
 public class Pet {
 
     @Id
@@ -10,36 +13,71 @@ public class Pet {
     private Long id;
 
     private String nome;
-    private String especie;   // <-- adicione este campo
+    private String especie;
     private String raca;
+    private int idade;
     private String vacinas;
-    private Integer idade;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
-    private Usuario tutor;
+    //@JsonBackReference
+    @JsonIgnore
+    private Usuario usuario; // 🔹 renomeado de tutor → usuario
 
-    // GETTERS E SETTERS
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // === Getters e Setters ===
+    public Long getId() {
+        return id;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getEspecie() { return especie; }  // <-- getter
-    public void setEspecie(String especie) { this.especie = especie; } // <-- setter
+    public String getNome() {
+        return nome;
+    }
 
-    public String getRaca() { return raca; }
-    public void setRaca(String raca) { this.raca = raca; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public String getVacinas() { return vacinas; }
-    public void setVacinas(String vacinas) { this.vacinas = vacinas; }
+    public String getEspecie() {
+        return especie;
+    }
 
-    public Integer getIdade() { return idade; }
-    public void setIdade(Integer idade) { this.idade = idade; }
+    public void setEspecie(String especie) {
+        this.especie = especie;
+    }
 
-    public Usuario getTutor() { return tutor; }
-    public void setTutor(Usuario tutor) { this.tutor = tutor; }
+    public String getRaca() {
+        return raca;
+    }
+
+    public void setRaca(String raca) {
+        this.raca = raca;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public String getVacinas() {
+        return vacinas;
+    }
+
+    public void setVacinas(String vacinas) {
+        this.vacinas = vacinas;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }
-
-

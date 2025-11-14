@@ -1,8 +1,9 @@
 <template>
-  <button :disabled="disabled" @click="$emit('click')" class="btn">
+  <button :disabled="disabled" @click="$emit('btn-click')" class="btn">
     <slot />
   </button>
 </template>
+
 
 <script setup>
 const props = defineProps({

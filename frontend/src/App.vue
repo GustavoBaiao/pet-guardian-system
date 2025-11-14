@@ -1,25 +1,22 @@
 <template>
   <Navbar />
 
-  <transition name="card" mode="out-in">
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" class="page-view" />
-      </keep-alive>
-    </router-view>
-  </transition>
+  <router-view v-slot="{ Component }">
+    <transition name="fade" mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
-
 
 <script setup>
 import Navbar from './components/Navbar.vue'
 </script>
 
 <style>
-body { 
-  font-family: Arial, sans-serif; 
-  margin: 0; 
-  padding: 0; 
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
   background: url('/src/assets/bg.png') no-repeat center center fixed;
   background-size: cover;
 }
@@ -42,8 +39,7 @@ body {
   transform: scale(1.03) translateY(-10px);
   filter: blur(6px);
 }
-
-
 </style>
+
 
 
